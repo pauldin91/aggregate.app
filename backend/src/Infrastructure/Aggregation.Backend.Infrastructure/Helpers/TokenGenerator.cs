@@ -16,7 +16,6 @@ namespace Aggregation.Backend.Infrastructure.Helpers
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userInfo.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, userInfo.Email),
                 new Claim(JwtRegisteredClaimNames.Name, userInfo.Name),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
@@ -34,7 +33,6 @@ namespace Aggregation.Backend.Infrastructure.Helpers
             return new TokenResponse
             {
                 AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
-                Exp = token.IssuedAt.AddHours(1)
             };
         }
     }

@@ -79,7 +79,7 @@ namespace Aggregation.Backend.Infrastructure.Extensions
             {
                 cfg.BaseAddress = new Uri(extIdOptions.BaseUrl);
                 cfg.Timeout = TimeSpan.FromMinutes(1);
-            
+                cfg.DefaultRequestHeaders.Add("User-Agent", "AggregationApi/0.1");
             }).ConfigurePrimaryHttpMessageHandler(cfg =>
             {   
                 var handler = new HttpClientHandler()

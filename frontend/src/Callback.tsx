@@ -1,11 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiFetch } from "./api";
 
 export default function Callback() {
   const navigate = useNavigate();
+  const called = useRef(false);
 
   useEffect(() => {
+    if (called.current) return;
+    called.current = true;
+
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
     const iss = urlParams.get("iss");
@@ -29,7 +33,7 @@ export default function Callback() {
     } else {
       navigate("/");
     }
-  }, []);
+  }, [navigate]);
 
   return <div>Processing GitHub login...</div>;
 }

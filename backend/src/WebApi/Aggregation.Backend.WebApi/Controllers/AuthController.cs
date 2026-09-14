@@ -53,7 +53,7 @@ namespace Aggregation.Backend.WebApi.Controllers
         [ProducesResponseType(typeof(List<AggregatedResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> ExchangeCode([FromBody] CallbackBody? body, CancellationToken cancellationToken)
+        public async Task<IActionResult> Callback([FromBody] CallbackBody? body, CancellationToken cancellationToken)
         {
             var tokenRequest = new HttpRequestMessage(HttpMethod.Post, _extIdProvider.TokenUrl)
             {
@@ -72,17 +72,26 @@ namespace Aggregation.Backend.WebApi.Controllers
             var tokenBody = await tokenResponse.Content.ReadAsStringAsync(cancellationToken);
             var tokenResult = System.Text.Json.JsonSerializer.Deserialize<TokenResponse>(tokenBody)!;
 
-            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "user");
-            requestMessage.Headers.Add(HeaderNames.Authorization, string.Format("{0} {1}", "Bearer", tokenResult.AccessToken));
+            try
+            {
 
-            var userInfoResponse = await _client.SendAsync(requestMessage, cancellationToken);
-            userInfoResponse.EnsureSuccessStatusCode();
+                var requestMessage = new HttpRequestMessage(HttpMethod.Get, string.Format("{0}/user", _extIdProvider.BaseUrl));
+                requestMessage.Headers.Add(HeaderNames.Authorization, string.Format("{0} {1}", "Bearer", tokenResult.AccessToken));
 
-            var userResult = await userInfoResponse.Content.ReadAsAsync<UserInfoResponse>();
+                var userInfoResponse = await _client.SendAsync(requestMessage, cancellationToken);
+                userInfoResponse.EnsureSuccessStatusCode();
 
-            var token = _tokenGenerator.GenerateToken(userResult);
+                var userResult = await userInfoResponse.Content.ReadAsAsync<UserInfoResponse>();
 
-            return Ok(new { AccessToken = token });
+                var token = _tokenGenerator.GenerateToken(userResult);
+
+                return Ok(new { AccessToken = token });
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest(e.Message);
+            }
 
 
 
