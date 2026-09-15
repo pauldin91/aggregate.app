@@ -1,30 +1,29 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
-import Home from "./Home";
-import Dashboard from "./Dashboard";
-import Callback from "./Callback";
+import ROUTES from "./constants/routes";
+import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
+import Callback from "./pages/Callback";
+import ErrorPage from "./pages/ErrorPage";
 import ProtectedRoute from "./components/ProtectedRoute";
-import ErrorPage from "./ErrorPage";
 
-function App() {
+export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/auth/github/callback" element={<Callback />} />
-        <Route path="/error" element={<ErrorPage />} />
+        <Route path={ROUTES.HOME} element={<Home />} />
+        <Route path={ROUTES.CALLBACK} element={<Callback />} />
+        <Route path={ROUTES.ERROR} element={<ErrorPage />} />
         <Route
-          path="/dashboard"
+          path={ROUTES.DASHBOARD}
           element={
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>
           }
         />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
       </Routes>
     </BrowserRouter>
   );
 }
-
-export default App;

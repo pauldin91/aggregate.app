@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import ROUTES from "../constants/routes";
 
 export default function ErrorPage() {
   const { state } = useLocation();
@@ -8,7 +9,7 @@ export default function ErrorPage() {
     <div className="flex flex-col items-center justify-center min-h-screen gap-4">
       <h1 className="text-2xl font-bold text-red-600">Something went wrong</h1>
       <p className="text-sm text-gray-600">{state?.message ?? "An unexpected error occurred."}</p>
-      <button onClick={() => navigate("/")} className="text-sm underline text-blue-600">
+      <button onClick={() => navigate(ROUTES.HOME)} className="text-sm underline text-blue-600">
         Go back home
       </button>
     </div>

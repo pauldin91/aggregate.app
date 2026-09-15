@@ -1,9 +1,8 @@
 import { Navigate } from "react-router-dom";
-import type { JSX } from "react/jsx-runtime";
+import type { ReactNode } from "react";
+import ROUTES from "../constants/routes";
 
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+export default function ProtectedRoute({ children }: { children: ReactNode }) {
   const token = localStorage.getItem("access_token");
-  return token ? children : <Navigate to="/" replace />;
-};
-
-export default ProtectedRoute;
+  return token ? <>{children}</> : <Navigate to={ROUTES.HOME} replace />;
+}
