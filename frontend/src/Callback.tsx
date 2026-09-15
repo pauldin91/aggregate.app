@@ -20,19 +20,24 @@ export default function Callback() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code, iss }),
       })
-        .then((response) => response.json())
+        .then((response) => {
+          return response.json();
+        })
         .then((data) => {
-          console.log(data.token);
-          if (data) {
-            localStorage.setItem("access_token", data.token);
+          if (data?.accessToken) {
+            localStorage.setItem("access_token", data.accessToken);
             navigate("/dashboard");
           } else {
-            navigate("/");
+            throw new Error("No access token returned.");
           }
         })
-        .catch(() => navigate("/"));
+        .catch((err: Error) =>
+          navigate("/error", { state: { message: err.message } }),
+        );
     } else {
-      navigate("/");
+      navigate("/error", {
+        state: { message: "Missing authorization code or issuer." },
+      });
     }
   }, [navigate]);
 

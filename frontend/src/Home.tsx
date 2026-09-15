@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Login from "./Login";
 import Dashboard from "./Dashboard";
-import Search from "./Search";
+import ErrorPage from "./ErrorPage";
 
 const Home = () => {
   const [auth, setAuth] = useState<boolean>(false);
@@ -13,13 +13,13 @@ const Home = () => {
   }, []);
 
 
-  if (error) return <p>{error}</p>;
+  if (error) return <ErrorPage />;
 
   if (!auth) {
     return <Login />;
   }
 
-  return <Search />;
+  return <Dashboard />;
 };
 
 export default Home;

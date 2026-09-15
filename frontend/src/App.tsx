@@ -4,9 +4,7 @@ import Home from "./Home";
 import Dashboard from "./Dashboard";
 import Callback from "./Callback";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Search from "./Search";
-
-
+import ErrorPage from "./ErrorPage";
 
 function App() {
   return (
@@ -14,19 +12,12 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/auth/github/callback" element={<Callback />} />
+        <Route path="/error" element={<ErrorPage />} />
         <Route
           path="/dashboard"
           element={
             <ProtectedRoute>
               <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/search"
-          element={
-            <ProtectedRoute>
-              <Search />
             </ProtectedRoute>
           }
         />

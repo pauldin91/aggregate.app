@@ -1,14 +1,24 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./Dashboard.module.css";
 import Search, { type AggregatedResult } from "./Search";
 
 export default function Dashboard() {
   const [results, setResults] = useState<AggregatedResult[]>([]);
+  const navigate = useNavigate();
+
+  const handleResults = (data: AggregatedResult[]) => {
+    if (!data || data.length === 0) {
+      navigate("/error", { state: { message: "No results found." } });
+    } else {
+      setResults(data);
+    }
+  };
 
   return (
     <div className={styles.container}>
       <h1>Dashboard</h1>
-      <Search onResults={setResults} />
+      <Search onResults={handleResults} />
       {results.length > 0 && (
         <table className={styles.table}>
           <thead>
