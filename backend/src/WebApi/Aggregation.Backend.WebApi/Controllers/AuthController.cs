@@ -82,7 +82,7 @@ namespace Aggregation.Backend.WebApi.Controllers
 
             var token = _tokenGenerator.GenerateToken(userResult.Name);
 
-            return Ok(token);
+            return Ok(new { Token = token });
 
 
 

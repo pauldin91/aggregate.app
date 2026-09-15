@@ -22,9 +22,9 @@ export default function Callback() {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
-          if (data.access_token) {
-            localStorage.setItem("access_token", data.access_token);
+          console.log(data.token);
+          if (data) {
+            localStorage.setItem("access_token", data.token);
             navigate("/dashboard");
           } else {
             navigate("/");
