@@ -72,26 +72,17 @@ namespace Aggregation.Backend.WebApi.Controllers
             var tokenBody = await tokenResponse.Content.ReadAsStringAsync(cancellationToken);
             var tokenResult = System.Text.Json.JsonSerializer.Deserialize<TokenResponse>(tokenBody)!;
 
-            try
-            {
+            var requestMessage = new HttpRequestMessage(HttpMethod.Get, string.Format("{0}/user", _extIdProvider.BaseUrl));
+            requestMessage.Headers.Add(HeaderNames.Authorization, string.Format("{0} {1}", "Bearer", tokenResult.AccessToken));
 
-                var requestMessage = new HttpRequestMessage(HttpMethod.Get, string.Format("{0}/user", _extIdProvider.BaseUrl));
-                requestMessage.Headers.Add(HeaderNames.Authorization, string.Format("{0} {1}", "Bearer", tokenResult.AccessToken));
+            var userInfoResponse = await _client.SendAsync(requestMessage, cancellationToken);
+            userInfoResponse.EnsureSuccessStatusCode();
 
-                var userInfoResponse = await _client.SendAsync(requestMessage, cancellationToken);
-                userInfoResponse.EnsureSuccessStatusCode();
+            var userResult = await userInfoResponse.Content.ReadAsAsync<UserInfoResponse>();
 
-                var userResult = await userInfoResponse.Content.ReadAsAsync<UserInfoResponse>();
+            var token = _tokenGenerator.GenerateToken(userResult.Name);
 
-                var token = _tokenGenerator.GenerateToken(userResult);
-
-                return Ok(token);
-            }
-            catch (Exception e)
-            {
-
-                return BadRequest(e.Message);
-            }
+            return Ok(token);
 
 
 

@@ -4,6 +4,6 @@ namespace Aggregation.Backend.Domain.Interfaces
 {
     public interface ITokenGenerator
     {
-        TokenResponse GenerateToken(UserInfoResponse userInfo);
+        string GenerateToken(string username);
     }
 }

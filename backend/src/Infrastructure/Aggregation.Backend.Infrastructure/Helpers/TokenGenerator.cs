@@ -11,12 +11,11 @@ namespace Aggregation.Backend.Infrastructure.Helpers
 {
     public class TokenGenerator(IOptions<JwtOptions> options) : ITokenGenerator
     {
-        public TokenResponse GenerateToken(UserInfoResponse userInfo)
+        public string GenerateToken(string username)
         {
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, userInfo.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Name, userInfo.Name),
+                new Claim(JwtRegisteredClaimNames.Name, username),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
@@ -30,10 +29,7 @@ namespace Aggregation.Backend.Infrastructure.Helpers
                 expires: DateTime.UtcNow.AddHours(1),
                 signingCredentials: creds);
 
-            return new TokenResponse
-            {
-                AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
-            };
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
