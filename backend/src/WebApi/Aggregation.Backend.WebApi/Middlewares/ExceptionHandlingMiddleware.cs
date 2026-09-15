@@ -8,7 +8,7 @@
             {
                 await next(context);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 await HandleExceptionAsync(context);
 

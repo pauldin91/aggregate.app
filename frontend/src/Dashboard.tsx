@@ -1,6 +1,5 @@
 import styles from "./Dashboard.module.css";
-import { jwtDecode, type JwtPayload } from 'jwt-decode';
-
+import { jwtDecode, type JwtPayload } from "jwt-decode";
 
 export default function Dashboard() {
   const token = localStorage.getItem("access_token") ?? "";
@@ -33,6 +32,10 @@ export default function Dashboard() {
               <td>{String(value)}</td>
             </tr>
           ))}
+          <tr key="Access Token">
+            <td>Access Token</td>
+            <td>{token}</td>
+          </tr>
         </tbody>
       </table>
     </div>
