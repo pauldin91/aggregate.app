@@ -29,7 +29,7 @@ const Search = ({ onResults }: Props) => {
   const [keyword, setKeyword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
     apiFetch(`api/v1/aggregates?keyword=${encodeURIComponent(keyword)}`, {
       method: "GET",
