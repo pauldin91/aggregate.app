@@ -1,43 +1,42 @@
+import { useState } from "react";
 import styles from "./Dashboard.module.css";
-import { jwtDecode, type JwtPayload } from "jwt-decode";
+import Search, { type AggregatedResult } from "./Search";
 
 export default function Dashboard() {
-  const token = localStorage.getItem("access_token") ?? "";
-
-  const decodePayload = (jwt: string): JwtPayload => {
-    try {
-      const payload = jwtDecode(jwt);
-      return payload;
-    } catch {
-      return {};
-    }
-  };
-
-  const claims = Object.entries(decodePayload(token));
+  const [results, setResults] = useState<AggregatedResult[]>([]);
 
   return (
     <div className={styles.container}>
       <h1>Dashboard</h1>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>Claim</th>
-            <th>Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          {claims.map(([claim, value]) => (
-            <tr key={claim}>
-              <td>{claim}</td>
-              <td>{String(value)}</td>
+      <Search onResults={setResults} />
+      {results.length > 0 && (
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Article Title</th>
+              <th>Article Author</th>
+              <th>City</th>
+              <th>Country</th>
+              <th>Feed Title</th>
+              <th>Feed Source</th>
+              <th>Sentiment</th>
             </tr>
-          ))}
-          <tr key="Access Token">
-            <td>Access Token</td>
-            <td>{token}</td>
-          </tr>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {results.map((r, i) => (
+              <tr key={i}>
+                <td>{r.article?.title ?? "-"}</td>
+                <td>{r.article?.author ?? "-"}</td>
+                <td>{r.city?.data?.city ?? "-"}</td>
+                <td>{r.city?.data?.country ?? "-"}</td>
+                <td>{r.feed?.title ?? "-"}</td>
+                <td>{r.feed?.source ?? "-"}</td>
+                <td>{r.feed?.overallSentimentLabel ?? "-"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }

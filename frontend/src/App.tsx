@@ -4,6 +4,7 @@ import Home from "./Home";
 import Dashboard from "./Dashboard";
 import Callback from "./Callback";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Search from "./Search";
 
 
 
@@ -18,6 +19,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/search"
+          element={
+            <ProtectedRoute>
+              <Search />
             </ProtectedRoute>
           }
         />

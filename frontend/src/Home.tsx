@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Login from "./Login";
 import Dashboard from "./Dashboard";
+import Search from "./Search";
 
 const Home = () => {
   const [auth, setAuth] = useState<boolean>(false);
@@ -18,7 +19,7 @@ const Home = () => {
     return <Login />;
   }
 
-  return <Dashboard />;
+  return <Search />;
 };
 
 export default Home;
