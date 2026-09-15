@@ -24,8 +24,8 @@ export default function Callback() {
           return response.json();
         })
         .then((data) => {
-          if (data?.accessToken) {
-            localStorage.setItem("access_token", data.accessToken);
+          if (data?.token) {
+            localStorage.setItem("access_token", data.token);
             navigate("/dashboard");
           } else {
             throw new Error("No access token returned.");
