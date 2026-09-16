@@ -1,4 +1,5 @@
 ﻿using Aggregation.Backend.Application.Features.Aggregates;
+using Aggregation.Backend.Application.Features.Air;
 using Aggregation.Backend.Domain.Constants;
 using Aggregation.Backend.Domain.Dtos.Aggregates;
 using MediatR;
@@ -53,9 +54,22 @@ namespace Aggregation.Backend.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [OutputCache(PolicyName = Domain.Constants.Policies.AggregatesCachePolicy)]
-        public async Task<IActionResult> GetNewsAsync([FromQuery] string keyword, [FromQuery] string? filterBy, [FromQuery] string? orderBy, CancellationToken cancellationToken, [FromQuery] bool asc = true)
+        public async Task<IActionResult> GetAggregatesAsync([FromQuery] string keyword, [FromQuery] string? filterBy, [FromQuery] string? orderBy, CancellationToken cancellationToken, [FromQuery] bool asc = true)
         {
             var result = await mediator.Send(new AggregatesQuery(keyword, filterBy, orderBy, asc), cancellationToken);
+
+            return Ok(result);
+        }
+
+
+        [HttpGet(ApiEndpoints.AirPollution)]
+        [ProducesResponseType(typeof(List<AggregatedResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [OutputCache(PolicyName = Domain.Constants.Policies.AggregatesCachePolicy)]
+        public async Task<IActionResult> GetAirPollutionAsync([FromQuery] string keyword, [FromQuery] string? filterBy, [FromQuery] string? orderBy, CancellationToken cancellationToken, [FromQuery] bool asc = true)
+        {
+            var result = await mediator.Send(new AirPollutionQuery(keyword, filterBy, orderBy, asc), cancellationToken);
 
             return Ok(result);
         }

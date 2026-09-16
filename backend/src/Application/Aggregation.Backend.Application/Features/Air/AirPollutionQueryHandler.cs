@@ -1,20 +1,18 @@
-﻿using Aggregation.Backend.Application.Interfaces;
+using Aggregation.Backend.Application.Interfaces;
 using MediatR;
 
-namespace Aggregation.Backend.Application.Features.Aggregates
+namespace Aggregation.Backend.Application.Features.Air
 {
-    public record AggregatesQuery(string Category, string? FilterBy,  string? SortBy, bool Asc = true) : IRequest<IList<Dictionary<string, object>>>;
+    public record AirPollutionQuery(string Category, string? FilterBy, string? SortBy, bool Asc = true) : IRequest<IList<Dictionary<string, object>>>;
 
-    public class AggregatesQueryHandler(IAirPollutionService airPollutionService,INewsService newsService,IStockMarketFeedService stockMarketFeedService) : IRequestHandler<AggregatesQuery, IList<Dictionary<string, object>>>
+    public class AirPollutionQueryHandler(IAirPollutionService airPollutionService) : IRequestHandler<AirPollutionQuery, IList<Dictionary<string, object>>>
     {
-        public async Task<IList<Dictionary<string, object>>> Handle(AggregatesQuery request, CancellationToken cancellationToken)
+        public async Task<IList<Dictionary<string, object>>> Handle(AirPollutionQuery request, CancellationToken cancellationToken)
         {
             var tasks = new List<Task<IList<Dictionary<string, object>>>> {
                 airPollutionService.ListAsync(request.Category, cancellationToken),
-                newsService.ListAsync(request.Category, cancellationToken),
-                stockMarketFeedService.ListAsync(request.Category, cancellationToken) 
             };
-            
+
 
             var taskResults = await Task.WhenAll(tasks);
 
