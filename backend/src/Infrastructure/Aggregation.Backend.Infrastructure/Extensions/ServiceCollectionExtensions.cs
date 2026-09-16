@@ -1,8 +1,6 @@
 ﻿using Aggregation.Backend.Application.Interfaces;
-using Aggregation.Backend.Domain.Entities;
 using Aggregation.Backend.Domain.Interfaces;
 using Aggregation.Backend.Infrastructure.Cache;
-using Aggregation.Backend.Infrastructure.Data.Contexts;
 using Aggregation.Backend.Infrastructure.Helpers;
 using Aggregation.Backend.Infrastructure.Hosted;
 using Aggregation.Backend.Infrastructure.Options;
@@ -25,15 +23,7 @@ namespace Aggregation.Backend.Infrastructure.Extensions
         {
             services.AddHangfire(cfg => { cfg.UseInMemoryStorage(); });
             services.AddHangfireServer();
-
-            // services.AddDbContext<AggregationBackendIdentityDbContext>(options =>
-            //     options.UseNpgsql(configuration.GetConnectionString(nameof(AggregationBackendIdentityDbContext))));
-
-            // services
-            //     .AddDefaultIdentity<AggregationBackendUser>(options => options.SignIn.RequireConfirmedAccount = false)
-            //     .AddDefaultTokenProviders()
-            //     .AddEntityFrameworkStores<AggregationBackendIdentityDbContext>();
-
+            
             var jwtOptions = new JwtOptions();
             configuration.Bind(nameof(JwtOptions), jwtOptions);
 

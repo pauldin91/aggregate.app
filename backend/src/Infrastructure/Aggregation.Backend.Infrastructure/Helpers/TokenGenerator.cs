@@ -13,10 +13,16 @@ namespace Aggregation.Backend.Infrastructure.Helpers
     {
         public string GenerateToken(string username)
         {
+            var expires = DateTime.UtcNow.AddHours(1);
             var claims = new[]
             {
+
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub, username),
                 new Claim(JwtRegisteredClaimNames.Name, username),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Iss, options.Value.Issuer),
+                new Claim(JwtRegisteredClaimNames.Aud, options.Value.Audience),
+                new Claim(JwtRegisteredClaimNames.Exp, expires.ToString("O")),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.Value.SecretKey));
@@ -26,7 +32,7 @@ namespace Aggregation.Backend.Infrastructure.Helpers
                 issuer: options.Value.Issuer,
                 audience: options.Value.Audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(1),
+                expires: expires,
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

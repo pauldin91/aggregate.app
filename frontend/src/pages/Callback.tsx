@@ -10,10 +10,11 @@ export default function Callback() {
   useEffect(() => {
     if (called.current) return;
     called.current = true;
-
+    
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
     const iss = params.get("iss");
+    console.log(`code : ${code}, iss : ${iss}`);
 
     if (!code || !iss) {
       navigate(ROUTES.ERROR, { state: { message: "Missing authorization code or issuer." } });
@@ -25,12 +26,14 @@ export default function Callback() {
       body: JSON.stringify({ code, iss }),
     })
       .then((res) => {
+        console.log(res);
         if (!res.ok) throw new Error(`Authentication failed with status ${res.status}`);
         return res.json();
       })
       .then((data) => {
-        if (!data?.accessToken) throw new Error("No access token returned.");
-        localStorage.setItem("access_token", data.accessToken);
+        console.log(data);
+        if (!data?.token) throw new Error("No access token returned.");
+        localStorage.setItem("access_token", data.token);
         navigate(ROUTES.DASHBOARD);
       })
       .catch((err: Error) => navigate(ROUTES.ERROR, { state: { message: err.message } }));

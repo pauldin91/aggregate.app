@@ -1,5 +1,4 @@
 using Aggregation.Backend.Application.Extensions;
-using Aggregation.Backend.Infrastructure.Data.Contexts;
 using Aggregation.Backend.Infrastructure.Extensions;
 using Aggregation.Backend.Infrastructure.Options;
 using Aggregation.Backend.WebApi.Extensions;
