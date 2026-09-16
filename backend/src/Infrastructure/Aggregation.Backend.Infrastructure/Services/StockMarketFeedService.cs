@@ -11,19 +11,28 @@ namespace Aggregation.Backend.Infrastructure.Services
 
         public async Task<IList<Dictionary<string, object>>> ListAsync(string category, CancellationToken cancellationToken)
         {
-            var queryString = $"function=NEWS_SENTIMENT&tickers={category}&apikey={options.Value.ApiKey}";
-            var relativePath = string.Join("?", options.Value.ListUri, queryString);
-            var response = await httpClientWrapper.GetAsync(relativePath, cancellationToken);
-            var infoDto = JsonConvert.DeserializeObject<InfoDto>(response);
-            if (string.IsNullOrEmpty(response) || ( infoDto?.Information is not null) )
+            try
             {
+
+                var queryString = $"function=NEWS_SENTIMENT&tickers={category}&apikey={options.Value.ApiKey}";
+                var relativePath = string.Join("?", options.Value.ListUri, queryString);
+                var response = await httpClientWrapper.GetAsync(relativePath, cancellationToken);
+                var infoDto = JsonConvert.DeserializeObject<InfoDto>(response);
+                if (string.IsNullOrEmpty(response) || (infoDto?.Information is not null))
+                {
+                    return new List<Dictionary<string, object>>();
+                }
+
+                var stockFeed = JsonConvert.DeserializeObject<StockMarketFeedDto>(response);
+                var result = stockFeed?.Feed.Select(s => s.ToMap()).ToList() ?? new List<Dictionary<string, object>>();
+                return result;
+            }
+            catch (Exception ex)
+            {
+
                 return new List<Dictionary<string, object>>();
             }
 
-            var stockFeed = JsonConvert.DeserializeObject<StockMarketFeedDto>(response);
-                var result = stockFeed?.Feed.Select(s => s.ToMap()).ToList() ?? new List<Dictionary<string, object>>();
-                return result;
-           
 
         }
     }
