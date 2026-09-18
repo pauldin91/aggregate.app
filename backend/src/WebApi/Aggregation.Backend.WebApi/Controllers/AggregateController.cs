@@ -62,7 +62,7 @@ namespace Aggregation.Backend.WebApi.Controllers
         }
 
 
-        [HttpGet(ApiEndpoints.AirPollution)]
+        [HttpGet(ApiEndpoints.GetAirPollutionRoute)]
         [ProducesResponseType(typeof(List<AggregatedResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

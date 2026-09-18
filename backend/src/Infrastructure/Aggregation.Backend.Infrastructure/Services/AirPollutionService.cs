@@ -8,6 +8,40 @@ namespace Aggregation.Backend.Infrastructure.Services
 {
     public class AirPollutionService(IHttpClientWrapper<AirPollutionOptions> httpClientWrapper, IOptions<AirPollutionOptions> options) : IAirPollutionService
     {
+        public async Task<IList<CityDto>> GetAirPollutionDataAsync(string category, CancellationToken cancellationToken)
+        {
+            var queryString = $"state={category}&country=Greece&key={options.Value.ApiKey}";
+            var relativePath = string.Join("?", options.Value.ListUri, queryString);
+            var response = await httpClientWrapper.GetAsync(relativePath, cancellationToken);
+
+            if (string.IsNullOrEmpty(response))
+            {
+                return [];
+            }
+
+            var cities = JsonConvert.DeserializeObject<CitiesDto>(response);
+
+            var tasks = new List<Task<CityDto?>>();
+            foreach (var item in cities?.Cities.Select(i=>i.City))
+            {
+                tasks.Add(Task.Run(async () =>
+                {
+                    var queryStringPerCity = $"city={item}&state={category}&country=Greece&key={options.Value.ApiKey}";
+                    var relativePathPerCity = string.Join("?", options.Value.GetUri, queryStringPerCity);
+
+                    var cityResponse = await httpClientWrapper.GetAsync(relativePathPerCity, cancellationToken);
+                    if (string.IsNullOrEmpty(cityResponse))
+                    {
+                        return new ();
+                    }
+                    return JsonConvert.DeserializeObject<CityDto>(cityResponse);
+                
+                },cancellationToken));
+            }
+
+            var results = await Task.WhenAll(tasks);
+            return [..results];
+        }
 
         public async Task<IList<Dictionary<string, object>>> ListAsync(string category, CancellationToken cancellationToken)
         {

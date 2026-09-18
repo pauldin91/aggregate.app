@@ -1,5 +1,9 @@
+import type { ArticleResult } from "./article";
+import type { CityResult } from "./city";
+import type { FeedResult } from "./feed";
+
 export type AggregatedResult = {
-  article?: { title?: string; author?: string; description?: string; url?: string };
-  city?: { status?: string; data?: { city?: string; state?: string; country?: string } };
-  feed?: { title?: string; source?: string; summary?: string; overallSentimentLabel?: string };
+  article?: ArticleResult;
+  city?: CityResult;
+  feed?: FeedResult;
 };
