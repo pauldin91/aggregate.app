@@ -3,35 +3,13 @@ using MediatR;
 
 namespace Aggregation.Backend.Application.Features.Air
 {
-    public record AirPollutionQuery(string Category, string? FilterBy, string? SortBy, bool Asc = true) : IRequest<IList<Dictionary<string, object>>>;
+    public record AirPollutionQuery(string Category, string? FilterBy, string? SortBy, bool Asc = true) : IRequest<CityDto>;
 
-    public class AirPollutionQueryHandler(IAirPollutionService airPollutionService) : IRequestHandler<AirPollutionQuery, IList<Dictionary<string, object>>>
+    public class AirPollutionQueryHandler(IAirPollutionService airPollutionService) : IRequestHandler<AirPollutionQuery, IList<CityDto>>
     {
-        public async Task<IList<Dictionary<string, object>>> Handle(AirPollutionQuery request, CancellationToken cancellationToken)
+        public async Task<IList<CityDto>> Handle(AirPollutionQuery request, CancellationToken cancellationToken)
         {
-            var tasks = new List<Task<IList<Dictionary<string, object>>>> {
-                airPollutionService.ListAsync(request.Category, cancellationToken),
-            };
-
-
-            var taskResults = await Task.WhenAll(tasks);
-
-            var result = taskResults.SelectMany(r => r).ToList();
-
-            if (!string.IsNullOrEmpty(request.FilterBy))
-            {
-                var filter = request.FilterBy.Split('=');
-                result = result.Where(s => s.TryGetValue(filter[0], out var value) && value == filter[1]).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(request.SortBy) && result.All(s => s.TryGetValue(request.SortBy, out _)))
-            {
-                result = request.Asc ?
-                    result.OrderBy(s => s[request.SortBy]).ToList()
-                    : result.OrderByDescending(s => s[request.SortBy]).ToList();
-            }
-
-            return result;
+            return await airPollutionService.GetAirPollutionDataAsync(request.Category, request.FilterBy, request.SortBy, request.Asc);
         }
     }
 }
