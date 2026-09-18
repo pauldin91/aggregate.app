@@ -1,1 +1,1 @@
-export type CityResult = { City?: string; State?: string; Country?: string };
+export type CityResult = { status?: string, data?: { city?: string; state?: string; country?: string } };

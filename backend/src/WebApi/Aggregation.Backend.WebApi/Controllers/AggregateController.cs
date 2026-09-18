@@ -2,6 +2,7 @@
 using Aggregation.Backend.Application.Features.Air;
 using Aggregation.Backend.Domain.Constants;
 using Aggregation.Backend.Domain.Dtos.Aggregates;
+using Aggregation.Backend.Domain.Dtos.External.Air;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -63,7 +64,7 @@ namespace Aggregation.Backend.WebApi.Controllers
 
 
         [HttpGet(ApiEndpoints.GetAirPollutionRoute)]
-        [ProducesResponseType(typeof(List<AggregatedResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<CityDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [OutputCache(PolicyName = Domain.Constants.Policies.AggregatesCachePolicy)]

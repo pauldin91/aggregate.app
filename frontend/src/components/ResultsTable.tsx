@@ -21,9 +21,9 @@ export default function ResultsTable({ results }: Props) {
       <tbody>
         {results.map((r, i) => (
           <tr key={i}>
-            <td>{r?.City ?? "-"}</td>
-            <td>{r?.State ?? "-"}</td>
-            <td>{r?.Country ?? "-"}</td>
+            <td>{r?.data?.city ?? "-"}</td>
+            <td>{r?.data?.state ?? "-"}</td>
+            <td>{r?.data?.country ?? "-"}</td>
           </tr>
         ))}
       </tbody>

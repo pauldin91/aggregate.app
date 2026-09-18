@@ -10,7 +10,9 @@ namespace Aggregation.Backend.Application.Features.Air
     {
         public async Task<IList<CityDto>> Handle(AirPollutionQuery request, CancellationToken cancellationToken)
         {
-            return await airPollutionService.GetAirPollutionDataAsync(request.Category, cancellationToken);
+            return (await airPollutionService.GetAirPollutionDataAsync(request.Category, cancellationToken))
+            .Where(s => s.Status == "success")
+            .ToList();
         }
     }
 }
